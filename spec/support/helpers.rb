@@ -4,6 +4,15 @@ module Helpers
     Rack::Test::UploadedFile.new(file, mime_type)
   end
 
+  def sign_in(user = nil)
+    return unless user
+
+    post user_session_path, params: {
+      'user[email]' => user.email,
+      'user[password]' => user.password
+    }
+  end
+
   def json_response
     if response.content_type.include? 'json'
       JSON.parse(response.body)

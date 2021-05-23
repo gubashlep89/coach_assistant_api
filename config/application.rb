@@ -1,17 +1,17 @@
 require_relative 'boot'
 
-require "rails"
+require 'rails'
 # Pick the frameworks you want:
-require "active_model/railtie"
-require "active_job/railtie"
-require "active_record/railtie"
-require "active_storage/engine"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "action_mailbox/engine"
-require "action_text/engine"
-require "action_view/railtie"
-require "action_cable/engine"
+require 'active_model/railtie'
+require 'active_job/railtie'
+require 'active_record/railtie'
+require 'active_storage/engine'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'action_mailbox/engine'
+require 'action_text/engine'
+require 'action_view/railtie'
+require 'action_cable/engine'
 # require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
@@ -33,5 +33,17 @@ module CoachAssistantApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    config.middleware.insert_after 0, Rack::Cors if Rails.env.development?
+    config.middleware.insert_after Rack::Runtime, Rack::MethodOverride
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.insert_after ActionDispatch::Cookies, ActionDispatch::Session::RedisStore,
+                                   key: 'coach_assistant_api_session',
+                                   expire_after: 10.years,
+                                   servers: [{ host: ENV['RAILS_REDIS_HOST'] || '127.0.0.1',
+                                               port: ENV['RAILS_REDIS_PORT'] || '6379' }]
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
   end
 end

@@ -10,5 +10,251 @@
   ],
   "produces": [
     "application/json"
-  ]
+  ],
+  "paths": {
+    "/current_user": {
+      "get": {
+        "summary": "Info about authenticated user",
+        "tags": [
+          "CurrentUser"
+        ],
+        "responses": {
+          "200": {
+            "description": "info about user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "datetime"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "datetime"
+                }
+              },
+              "required": [
+                "id",
+                "email",
+                "created_at",
+                "updated_at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "401": {
+            "description": "user is not authenticated"
+          }
+        }
+      }
+    },
+    "/auth/password": {
+      "post": {
+        "summary": "Create link to generate new password",
+        "tags": [
+          "UserPassword"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ok"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update password",
+        "tags": [
+          "UserPassword"
+        ],
+        "parameters": [
+          {
+            "name": "payload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "reset_password_token": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "password_confirmation": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ok"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "summary": "Create user",
+        "tags": [
+          "UserRegistration"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "password"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "user"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "user authenticated"
+          }
+        }
+      }
+    },
+    "/auth/sign_in": {
+      "post": {
+        "summary": "Authenticate user by email and password",
+        "tags": [
+          "UserSessions"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "password"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "user"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "user authenticated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "datetime"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "datetime"
+                }
+              },
+              "required": [
+                "id",
+                "email",
+                "created_at",
+                "updated_at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "401": {
+            "description": "wrong credentials"
+          }
+        }
+      }
+    },
+    "/auth/sign_out": {
+      "delete": {
+        "summary": "Delete user session",
+        "tags": [
+          "UserSessions"
+        ],
+        "responses": {
+          "204": {
+            "description": "user session deleted"
+          }
+        }
+      }
+    }
+  }
 }
